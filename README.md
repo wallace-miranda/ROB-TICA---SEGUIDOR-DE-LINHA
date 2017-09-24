@@ -24,22 +24,30 @@ Neste tópico será mostrado todos os materiais e métodos utilizados na constru
 
 Figura 2. Robô seguidor de linha montado.
 
-MATERIAIS	QUANTIDADE
-ARDUINO UNO	1
-DRIVER MOTOR PONTE H L298N	1
-MODULO SENSOR INFRAVERMELHO	3
-KIT CHASSI 4WD. 
-Obs: incluso as 4 rodas e os 4 motores com suas reduções	1
+![image](https://user-images.githubusercontent.com/32083310/30787410-fb00934c-a15d-11e7-997b-4e8553580fb2.png)
+
 Tabela 1. Lista de materiais.
+
 Os testes foram feitos em uma pista feita pelo professor-orientador da turma, projetada com fundo da tela branco e linha a ser seguida pelo robô é de cor preta. Os primeiros testes do robô foram para testar seuS motores em relação a sentido de rotação e velocidade. Logo em seguida veio o teste ON/OFF e com uma velocidade bem baixa, e no decorrer dos testes fomos aumentando sua velocidade. O terceiro passo foi implementar o PID com o integral e o derivativo inexistentes, apenas modificando o Kp (controle proporcional). Após vários testes determinamos o valor de Kp e com isso começamos a procurar o valor de Ki e Kd, para fazer o robô seguia a linha de maneira mais suave e o mais rápido possível.
-•	Cálculo do valor lido:
+
+•	Cálculo do valor lido pelos sensores:
 V = ( 300*E + 200*C + 100*D) / ( E + C + D );
+
 •	Cálculo do erro:
 Erro = setPoint - V;
-•	Calculo dos controladores: 
+
+A ideia básica por trás do controlador PID é ler um sensor, fazer um somatório do controlador proporcional, integral e derivativo para então da uma resposta de saída. Os valores lidos pelos sensores ( 0/1 ) são a cada ciclo de loop atualizados e dependendo desses valores isto vai influenciar no Erro[e(t)], que consequentemente irá influenciar nos controladores PI.
+
+![image](https://user-images.githubusercontent.com/32083310/30787437-b091c05a-a15e-11e7-9bc3-3e895743ca88.png)
+
+•	Cálculo dos controladores: 
 P = Erro * Kp;
 I = Erro * DT * Ki;
 DER = ( Kd * (V - Va)) / DT;
+P: tem como ação a amplitude do erro através da constante Kp, com isso esse sistema controla as oscilações, mas se o ganho proporcional é muito grande a variável de processo começará a oscilar, podendo deixar o sistema instável.
+I: este controlador soma o termo de erro ao longo do tempo. O resultado é que mesmo um pequeno erro fará com que a componente integral aumente lentamente, seu efeito é o de conduzir o erro de estado estacionário para zero.
+D: a componente derivada faz com que a saída diminua se a variável de processo está aumentando rapidamente. A derivada de resposta é proporcional à taxa de variação da variável de processo. Aumentar o parâmetro do tempo derivativo (DT) fará com que o sistema de controle reaja mais fortemente à mudanças no parâmetro de erro aumentando a velocidade da resposta global de controle do sistema. 
+
 
 4.	RESULTADOS E DISCURSÕES
 No primeiro teste no qual não foi utilizado o PID (teste ON/OFF), foi percebido que o robô fazia movimentos bruscos e ao aumenta sua velocidade de atuação ele não conseguia seguir a linha na curva por conta de sua resposta ao processo de controle. Ao inserir o controlador Kp conseguimos notar que o robô conseguia seguir a linha na curva porem de uma maneira não tanto suave, e ao se inserir e ajustar os valores de Ki e Kd o robô conseguia fazer o circuito com pequenas oscilações.
